@@ -1,6 +1,6 @@
-package com.foxminded.collectiontask;
+package com.foxminded.symbolscounter;
 
-import com.foxminded.collectiontask.processors.SymbolsCounterProcessor;
+import com.foxminded.symbolscounter.processors.SymbolsCounterProcessor;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -208,3 +208,4 @@ class TestSymbolsCounterProcessor {
         assertEquals(expected, actual);
     }
 }
+

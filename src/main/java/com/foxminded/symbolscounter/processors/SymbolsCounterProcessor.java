@@ -1,8 +1,7 @@
-package com.foxminded.collectiontask.processors;
+package com.foxminded.symbolscounter.processors;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 public class SymbolsCounterProcessor {
     public String process(String input) {
@@ -17,34 +16,36 @@ public class SymbolsCounterProcessor {
         return result;
     }
 
-    private Map countSymbols(String input) {
+    private Map<Character, Integer> countSymbols(String input) {
         Map<Character, Integer> result = new HashMap<>();
-        IntStream.range(0, input.length()).forEach(i -> {
-            char character = input.charAt(i);
-            if (!result.containsKey(character)) {
-                result.put(character, 1);
+        input.chars().forEach(i -> {
+            if (!result.containsKey((char) i)) {
+                result.put((char) i, 1);
             } else {
-                int value = result.get(character) + 1;
-                result.put(character, value);
+                result.merge((char) i, 1, (oldVal, newVal) -> oldVal + newVal);
             }
         });
+
         return result;
     }
 
     private String mapToString(Map<Character, Integer> inputMap, String input) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append('"').
-                append(input).
-                append('"').
-                append("\n");
+        stringBuilder.append('"')
+                .append(input)
+                .append('"')
+                .append("\n");
+
         for (Map.Entry<Character, Integer> entry : inputMap.entrySet()) {
-            stringBuilder.
-                    append('"').
-                    append(entry.getKey()).
-                    append('"').append(" ").
-                    append(entry.getValue()).
-                    append("\n");
+            stringBuilder
+                    .append('"')
+                    .append(entry.getKey())
+                    .append('"').append(" ")
+                    .append(entry.getValue())
+                    .append("\n");
         }
+
         return stringBuilder.toString().trim();
     }
 }
+
