@@ -1,11 +1,11 @@
 package com.foxminded.symbolscounter;
 
-import com.foxminded.symbolscounter.processors.SymbolsCounterProcessor;
+import com.foxminded.symbolscounter.processors.WorkingWithUserProcessor;
 
 public class SymbolsCounter {
+
     public static void main(String[] args) {
-        SymbolsCounterProcessor symbolsCounterProcessor = new SymbolsCounterProcessor();
-        String result = symbolsCounterProcessor.process("aabc");
-        System.out.println(result);
+        WorkingWithUserProcessor workingWithUserProcessor = new WorkingWithUserProcessor();
+        workingWithUserProcessor.process();
     }
 }
