@@ -6,6 +6,7 @@ import java.util.Map;
 public class SymbolsCounterProcessor {
     public String process(String input) {
         String result;
+
         if (input == null || input.equals("")) {
             result = input;
         } else {
@@ -18,6 +19,7 @@ public class SymbolsCounterProcessor {
 
     private Map<Character, Integer> countSymbols(String input) {
         Map<Character, Integer> result = new HashMap<>();
+
         input.chars().forEach(i -> {
             if (!result.containsKey((char) i)) {
                 result.put((char) i, 1);

@@ -1,11 +1,11 @@
 package com.foxminded.symbolscounter;
 
-import com.foxminded.symbolscounter.processors.WorkingWithUserProcessor;
+import com.foxminded.symbolscounter.userinterfaces.UserInterface;
 
 public class SymbolsCounter {
 
     public static void main(String[] args) {
-        WorkingWithUserProcessor workingWithUserProcessor = new WorkingWithUserProcessor();
-        workingWithUserProcessor.process();
+        UserInterface userInterface = new UserInterface();
+        userInterface.process();
     }
 }

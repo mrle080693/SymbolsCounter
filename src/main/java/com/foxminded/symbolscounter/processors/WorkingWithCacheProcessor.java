@@ -12,20 +12,22 @@ public class WorkingWithCacheProcessor {
         Cache cache = loadCache();
         String result = input;
         SymbolsCounterProcessor symbolsCounterProcessor = new SymbolsCounterProcessor();
-        if (cache.getCache().containsKey(input)) {
-            result = cache.getCache().get(input);
+
+        if (cache.getInputsResults().containsKey(input)) {
+            result = cache.getInputsResults().get(input);
             cache.getInputsStatistic().merge(input, (long) 1, (oldVal, newVal) -> oldVal + newVal);
         } else {
             String counterProcessorResult = symbolsCounterProcessor.process(input);
             writeInCache(input, counterProcessorResult);
         }
+
         return result;
     }
 
     private void writeInCache(String input, String result) {
         Cache cache = loadCache();
 
-        cache.getCache().put(input, result);
+        cache.getInputsResults().put(input, result);
         cache.getInputsStatistic().put(input, (long) 1);
 
         saveInCache(cache);
@@ -34,6 +36,7 @@ public class WorkingWithCacheProcessor {
     private void saveInCache(Cache cache) {
         FileOutputStream fileOutputStream = null;
         ObjectOutputStream objectOutputStream = null;
+
         try {
             fileOutputStream = new FileOutputStream("cache");
             objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -48,6 +51,7 @@ public class WorkingWithCacheProcessor {
                 e.printStackTrace();
             }
         }
+
         deleteTheLeastPopularInputs();
     }
 
@@ -78,28 +82,38 @@ public class WorkingWithCacheProcessor {
                 }
             }
         }
+
         return cache;
     }
 
     private void deleteTheLeastPopularInputs() {
         Cache cache = loadCache();
-        if (cache.getCache().size() > 100) {
-            for (int i = 0; cache.getCache().size() > 100; i++) {
+
+        if (cache.getInputsResults().size() > 100) {
+            for (int i = 0; cache.getInputsResults().size() > 100; i++) {
                 Map.Entry<String, Long> minEntry = null;
                 String theLeastPopularKey = null;
+
                 for (Map.Entry<String, Long> entry : cache.getInputsStatistic().entrySet()) {
                     if (minEntry == null || entry.getValue() < minEntry.getValue()) {
                         minEntry = entry;
                     }
                 }
+
                 if (minEntry != null) {
                     theLeastPopularKey = minEntry.getKey();
                     cache.getInputsStatistic().remove(theLeastPopularKey);
-                    cache.getCache().remove(theLeastPopularKey);
+                    cache.getInputsResults().remove(theLeastPopularKey);
                 }
             }
+
             saveInCache(cache);
         }
+    }
+
+    public void clearCache() {
+        Cache cache = new Cache();
+        saveInCache(cache);
     }
 
     public Cache getCache() {
