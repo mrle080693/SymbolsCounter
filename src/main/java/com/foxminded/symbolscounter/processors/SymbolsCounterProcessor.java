@@ -21,11 +21,7 @@ public class SymbolsCounterProcessor {
         Map<Character, Integer> result = new HashMap<>();
 
         input.chars().forEach(i -> {
-            if (!result.containsKey((char) i)) {
-                result.put((char) i, 1);
-            } else {
-                result.merge((char) i, 1, (oldVal, newVal) -> oldVal + newVal);
-            }
+            result.merge((char) i, 1, (oldVal, newVal) -> oldVal + newVal);
         });
 
         return result;

@@ -1,23 +1,22 @@
 package com.foxminded.symbolscounter;
 
-import com.foxminded.symbolscounter.processors.SymbolsCounterProcessor;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-class TestSymbolsCounterProcessor {
-    private SymbolsCounterProcessor symbolsCounterProcessor = new SymbolsCounterProcessor();
+class TestSymbolsCounterManager {
+    private SymbolsCounterManager symbolsCounterManager = new SymbolsCounterManager();
 
     @Test
     void processMustReturnNullIfInputIsNull() {
-        assertNull(symbolsCounterProcessor.process(null));
+        assertNull(symbolsCounterManager.process(null));
     }
 
     @Test
     void processMustReturnEmptyStringIfInputIsEmptyString() {
         String expected = "";
-        String actual = symbolsCounterProcessor.process("");
+        String actual = symbolsCounterManager.process("");
         assertEquals(expected, actual);
     }
 
@@ -25,7 +24,7 @@ class TestSymbolsCounterProcessor {
     void processMustReturnCorrectResultIfInputIsSeparator() {
         String expected = "\" \"\n" +
                 "\" \" 1";
-        String actual = symbolsCounterProcessor.process(" ");
+        String actual = symbolsCounterManager.process(" ");
         assertEquals(expected, actual);
     }
 
@@ -33,7 +32,7 @@ class TestSymbolsCounterProcessor {
     void processMustReturnCorrectResultIfInputIsSeparators() {
         String expected = "\"       \"\n" +
                 "\" \" 7";
-        String actual = symbolsCounterProcessor.process("       ");
+        String actual = symbolsCounterManager.process("       ");
         assertEquals(expected, actual);
     }
 
@@ -41,7 +40,7 @@ class TestSymbolsCounterProcessor {
     void processMustReturnCorrectResultWhenInputIsOneLetter() {
         String expected = "\"a\"\n" +
                 "\"a\" 1";
-        String actual = symbolsCounterProcessor.process("a");
+        String actual = symbolsCounterManager.process("a");
         assertEquals(expected, actual);
     }
 
@@ -49,7 +48,7 @@ class TestSymbolsCounterProcessor {
     void processMustReturnCorrectResultWhenInputIsManySameLetters() {
         String expected = "\"aaaaa\"\n" +
                 "\"a\" 5";
-        String actual = symbolsCounterProcessor.process("aaaaa");
+        String actual = symbolsCounterManager.process("aaaaa");
         assertEquals(expected, actual);
     }
 
@@ -57,7 +56,7 @@ class TestSymbolsCounterProcessor {
     void processMustReturnCorrectResultWhenInputIsOneLetterInUpperCase() {
         String expected = "\"A\"\n" +
                 "\"A\" 1";
-        String actual = symbolsCounterProcessor.process("A");
+        String actual = symbolsCounterManager.process("A");
         assertEquals(expected, actual);
     }
 
@@ -65,7 +64,7 @@ class TestSymbolsCounterProcessor {
     void processMustReturnCorrectResultWhenInputIsManySameLettersInUpperCase() {
         String expected = "\"AAAAA\"\n" +
                 "\"A\" 5";
-        String actual = symbolsCounterProcessor.process("AAAAA");
+        String actual = symbolsCounterManager.process("AAAAA");
         assertEquals(expected, actual);
     }
 
@@ -74,7 +73,7 @@ class TestSymbolsCounterProcessor {
         String expected = "\"AaAaA\"\n" +
                 "\"a\" 2\n" +
                 "\"A\" 3";
-        String actual = symbolsCounterProcessor.process("AaAaA");
+        String actual = symbolsCounterManager.process("AaAaA");
         assertEquals(expected, actual);
     }
 
@@ -86,7 +85,7 @@ class TestSymbolsCounterProcessor {
                 "\"c\" 1\n" +
                 "\"d\" 1\n" +
                 "\"e\" 1";
-        String actual = symbolsCounterProcessor.process("Abcde");
+        String actual = symbolsCounterManager.process("Abcde");
         assertEquals(expected, actual);
     }
 
@@ -113,7 +112,7 @@ class TestSymbolsCounterProcessor {
                 "\"н\" 1\n" +
                 "\"о\" 5\n" +
                 "\"П\" 1";
-        String actual = symbolsCounterProcessor.process("Превысокомногорассмотрительствующий");
+        String actual = symbolsCounterManager.process("Превысокомногорассмотрительствующий");
         assertEquals(expected, actual);
     }
 
@@ -125,7 +124,7 @@ class TestSymbolsCounterProcessor {
                 "\"3\" 1\n" +
                 "\"4\" 1\n" +
                 "\"5\" 1";
-        String actual = symbolsCounterProcessor.process("12345");
+        String actual = symbolsCounterManager.process("12345");
         assertEquals(expected, actual);
     }
 
@@ -137,7 +136,7 @@ class TestSymbolsCounterProcessor {
                 "\"*\" 1\n" +
                 "\">\" 1\n" +
                 "\"/\" 1";
-        String actual = symbolsCounterProcessor.process("#/*!>");
+        String actual = symbolsCounterManager.process("#/*!>");
         assertEquals(expected, actual);
     }
 
@@ -145,7 +144,7 @@ class TestSymbolsCounterProcessor {
     void processMustReturnCorrectResultWhenInputIsSameSpecialSymbols() {
         String expected = "\"∑∑∑∑∑\"\n" +
                 "\"∑\" 5";
-        String actual = symbolsCounterProcessor.process("∑∑∑∑∑");
+        String actual = symbolsCounterManager.process("∑∑∑∑∑");
         assertEquals(expected, actual);
     }
 
@@ -164,7 +163,7 @@ class TestSymbolsCounterProcessor {
                 "\"l\" 2\n" +
                 "\">\" 1\n" +
                 "\"o\" 1";
-        String actual = symbolsCounterProcessor.process("Hello 234 )>@!");
+        String actual = symbolsCounterManager.process("Hello 234 )>@!");
         assertEquals(expected, actual);
     }
 
@@ -203,9 +202,18 @@ class TestSymbolsCounterProcessor {
                 "\"v\" 2\n" +
                 "\"y\" 2\n" +
                 "\":\" 1";
-        String actual = symbolsCounterProcessor.process("HELLO JAVA!!! \" +\n" +
+        String actual = symbolsCounterManager.process("HELLO JAVA!!! \" +\n" +
                 "                \"I am very glad that I have chance to learn you :) ");
         assertEquals(expected, actual);
     }
-}
 
+    @Test
+    void processMustAddNewInputsInCache() {
+        symbolsCounterManager.process("Hello");
+
+        boolean expected = true;
+        boolean actual = symbolsCounterManager.getCache().containsKey("Hello");
+
+        assertEquals(expected, actual);
+    }
+}
