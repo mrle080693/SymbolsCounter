@@ -12,7 +12,7 @@ public class SymbolsCounterProcessor {
         if (input == null || input.equals("")) {
             result = input;
         } else {
-            result = findInCache(input);
+            result = cache.get(input);
 
             if (result == null) {
                 Map sortedInput = countSymbols(input);
@@ -27,7 +27,9 @@ public class SymbolsCounterProcessor {
     private Map<Character, Integer> countSymbols(String input) {
         Map<Character, Integer> result = new HashMap<>();
 
-        input.chars().forEach(i -> result.merge((char) i, 1, (oldVal, newVal) -> oldVal + newVal));
+        input.chars()
+                .forEach(i -> result
+                        .merge((char) i, 1, (oldVal, newVal) -> oldVal + newVal));
 
         return result;
     }
@@ -49,20 +51,6 @@ public class SymbolsCounterProcessor {
         }
 
         return stringBuilder.toString().trim();
-    }
-
-    private String findInCache(String input) {
-        String result = null;
-
-        if (cache.containsKey(input)) {
-            result = cache.get(input);
-        }
-
-        return result;
-    }
-
-    public Map getCache() {
-        return cache;
     }
 }
 

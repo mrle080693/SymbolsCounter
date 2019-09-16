@@ -6,41 +6,35 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class SymbolsCounter {
-    private static Scanner scanner;
 
     public static void main(String[] args) {
-        try {
-            scanner = new Scanner(System.in);
+        try (Scanner scanner = new Scanner(System.in)) {
             SymbolsCounterProcessor symbolsCounterProcessor = new SymbolsCounterProcessor();
             boolean exit = false;
-            String input = null;
-            String result = null;
 
-            for (int i = 0; !exit; i++) {
-                input = getStringFromUser();
+            for (; !exit; ) {
+                String input = getStringFromUser(scanner);
 
-                result = symbolsCounterProcessor.process(input);
+                String result = symbolsCounterProcessor.process(input);
 
                 System.out.println();
                 System.out.println(result);
 
-                exit = getUsersChoice();
+                exit = getUsersChoice(scanner);
             }
         } catch (InputMismatchException e) {
             throw new InputMismatchException("Sorry :(");
-        } finally {
-            scanner.close();
         }
     }
 
-    private static String getStringFromUser() {
+    private static String getStringFromUser(Scanner scanner) {
         System.out.println();
         System.out.println("Write and press the enter key please");
 
         return scanner.nextLine();
     }
 
-    private static boolean getUsersChoice() {
+    private static boolean getUsersChoice(Scanner scanner) {
         boolean result = false;
 
         System.out.println();
