@@ -4,7 +4,6 @@ import com.foxminded.symbolscounter.processors.SymbolsCounterProcessor;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 class SymbolsCounterManager {
     private Map<String, String> cache = new HashMap<>();
@@ -28,14 +27,13 @@ class SymbolsCounterManager {
     }
 
     private String findInCache(String input) {
-        AtomicReference<String> result = new AtomicReference<>();
-        result.set(null);
+        String result = null;
 
-        cache.keySet().stream().filter(i -> i.equals(input)).forEach(i -> {
-            result.set(cache.get(i));
-        });
+        if (cache.containsKey(input)) {
+            result = cache.get(input);
+        }
 
-        return result.get();
+        return result;
     }
 
     public Map<String, String> getCache() {
