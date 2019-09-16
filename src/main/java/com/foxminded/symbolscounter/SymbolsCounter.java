@@ -1,28 +1,35 @@
 package com.foxminded.symbolscounter;
 
+import com.foxminded.symbolscounter.processors.SymbolsCounterProcessor;
+
 import java.util.Scanner;
 
 public class SymbolsCounter {
-    private static Scanner scanner = new Scanner(System.in);
+    private static Scanner scanner;
 
     public static void main(String[] args) {
-        SymbolsCounterManager symbolsCounterManager = new SymbolsCounterManager();
-        boolean exit = false;
-        String input = null;
-        String result = null;
+        try {
+            scanner = new Scanner(System.in);
+            SymbolsCounterProcessor symbolsCounterProcessor = new SymbolsCounterProcessor();
+            boolean exit = false;
+            String input = null;
+            String result = null;
 
-        for (int i = 0; !exit; i++) {
-            input = getStringFromUser();
+            for (int i = 0; !exit; i++) {
+                input = getStringFromUser();
 
-            result = symbolsCounterManager.process(input);
+                result = symbolsCounterProcessor.process(input);
 
-            System.out.println();
-            System.out.println(result);
+                System.out.println();
+                System.out.println(result);
 
-            exit = getUsersChoice();
+                exit = getUsersChoice();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            scanner.close();
         }
-
-        scanner.close();
     }
 
     private static String getStringFromUser() {
@@ -39,6 +46,7 @@ public class SymbolsCounter {
         System.out.println("Would you like to repeat");
         System.out.println("Yes - 1");
         System.out.println("No  - Anything else");
+
         String choice = scanner.nextLine();
 
         if (!choice.equals("1")) {

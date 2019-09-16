@@ -4,14 +4,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SymbolsCounterProcessor {
+    private Map<String, String> cache = new HashMap<>();
+
     public String process(String input) {
         String result;
 
         if (input == null || input.equals("")) {
             result = input;
         } else {
-            Map sortedInput = countSymbols(input);
-            result = mapToString(sortedInput, input);
+            result = findInCache(input);
+
+            if (result == null) {
+                Map sortedInput = countSymbols(input);
+                result = mapToString(sortedInput, input);
+                cache.put(input, result);
+            }
         }
 
         return result;
@@ -20,9 +27,7 @@ public class SymbolsCounterProcessor {
     private Map<Character, Integer> countSymbols(String input) {
         Map<Character, Integer> result = new HashMap<>();
 
-        input.chars().forEach(i -> {
-            result.merge((char) i, 1, (oldVal, newVal) -> oldVal + newVal);
-        });
+        input.chars().forEach(i -> result.merge((char) i, 1, (oldVal, newVal) -> oldVal + newVal));
 
         return result;
     }
@@ -44,6 +49,20 @@ public class SymbolsCounterProcessor {
         }
 
         return stringBuilder.toString().trim();
+    }
+
+    private String findInCache(String input) {
+        String result = null;
+
+        if (cache.containsKey(input)) {
+            result = cache.get(input);
+        }
+
+        return result;
+    }
+
+    public Map getCache() {
+        return cache;
     }
 }
 

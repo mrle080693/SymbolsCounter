@@ -207,5 +207,15 @@ class TestSymbolsCounterProcessor {
                 "                \"I am very glad that I have chance to learn you :) ");
         assertEquals(expected, actual);
     }
+
+    @Test
+    void processMustAddNewInputsInCache() {
+        symbolsCounterProcessor.process("Hello");
+
+        boolean expected = true;
+        boolean actual = symbolsCounterProcessor.getCache().containsKey("Hello");
+
+        assertEquals(expected, actual);
+    }
 }
 
