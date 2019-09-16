@@ -2,6 +2,7 @@ package com.foxminded.symbolscounter;
 
 import com.foxminded.symbolscounter.processors.SymbolsCounterProcessor;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class SymbolsCounter {
@@ -25,8 +26,8 @@ public class SymbolsCounter {
 
                 exit = getUsersChoice();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (InputMismatchException e) {
+            throw new InputMismatchException("Sorry :(");
         } finally {
             scanner.close();
         }
